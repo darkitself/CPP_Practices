@@ -65,9 +65,10 @@ bool Maze::removeConnection(int i1, int j1, int i2, int j2)
 
 void Maze::printMaze() const
 {
+	cout << '0';
 	for (int i = 0; i < this->m_rows; i++)
 	{
-		for (int j = 0; j < this->m_columns; j++)
+		for (int j = i == 0 ? 1 : 0; j < this->m_columns; j++)
 			cout << symbols[(hasConnection(i, j, i - 1, j) ? 1 : 0) +
 							(hasConnection(i, j, i, j - 1) ? 8 : 0) +
 							(this->cell(i, j).right() ? 2 : 0) +

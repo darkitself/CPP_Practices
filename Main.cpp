@@ -3,18 +3,20 @@
 
 void addChildren(MTreeNode* node, Maze& maze, int weights[5][5])
 {
-	MCell cell = maze.cell(node->i(), node->j());
+	int i = node->i();
+	int j = node->j();
+	MCell cell = maze.cell(i, j);
 	if (cell.right())
 	{
-		node->addChild(node->i(), node->j() + 1);
-		weights[node->i()][node->j() + 1] = node->distance() + 1;
-		addChildren(node->hasChild(node->i(), node->j() + 1), maze, weights);
+		node->addChild(i, j + 1);
+		weights[i][j + 1] = node->distance() + 1;
+		addChildren(node->hasChild(i + 1 - 1, j + 1), maze, weights);
 	}
 	if (cell.down())
 	{
-		node->addChild(node->i() + 1, node->j());
-		weights[node->i() + 1][node->j()] = node->distance() + 1;
-		addChildren(node->hasChild(node->i() + 1, node->j()), maze, weights);
+		node->addChild(i + 1, j);
+		weights[i + 1][j] = node->distance() + 1;
+		addChildren(node->hasChild(i + 1, j), maze, weights);
 	}
 }
 

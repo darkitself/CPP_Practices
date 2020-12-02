@@ -4,10 +4,9 @@ class MTreeNode
 private:
 	int m_i = 0, m_j = 0;
 	MTreeNode* m_parent = nullptr;
-	MTreeNode* m_children = nullptr;
+	MTreeNode* m_children[4];
 	int m_childCount = 0;
 	int m_distance = 0;
-	MTreeNode();
 	MTreeNode(MTreeNode* parent);
 public:
 	int i() const;

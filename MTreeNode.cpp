@@ -1,14 +1,8 @@
 #include "MTreeNode.h"
 
-MTreeNode::MTreeNode()
-{
-
-}
-
 MTreeNode::MTreeNode(MTreeNode* parent)
 {
-	this->m_parent = parent;
-	this->m_children = new MTreeNode[2];
+	m_parent = parent;
 	m_distance = parent != nullptr ? parent->distance() + 1 : 0;
 }
 
@@ -29,7 +23,7 @@ const MTreeNode* MTreeNode::parent() const
 
 const MTreeNode* MTreeNode::child(int i) const
 {
-	return m_children + i;
+	return m_children[i];
 }
 
 int MTreeNode::distance() const
@@ -44,39 +38,21 @@ int MTreeNode::childCount() const
 
 bool MTreeNode::addChild(int i, int j)
 {
-	if (this->j() - j == 0 && this->i() - i == -1)
-	{
-		this->m_children[0].m_parent = this;
-		this->m_children[0].m_distance = this->m_distance + 1;
-		this->m_children[0].m_children = new MTreeNode[2];
-		this->m_children[0].m_i = i;
-		this->m_children[0].m_j = j;
-		this->m_childCount++;
-		return true;
-	}
-	else if (this->i() - i == 0 && this->j() - j == -1)
-	{
-		this->m_children[1].m_parent = this;
-		this->m_children[1].m_distance = this->m_distance + 1;
-		this->m_children[1].m_children = new MTreeNode[2];
-		this->m_children[1].m_i = i;
-		this->m_children[1].m_j = j;
-		this->m_childCount++;
-		return true;
-	}
-	return false;
+	if (!(this->m_i - i == 0 && (this->m_j - j == 1 || this->m_j - j == -1)
+		|| this->m_j - j == 0 && (this->m_i - i == 1 || this->m_i - i == -1)))
+		return false;
+	this->m_children[this->m_childCount] = new MTreeNode(this);
+	this->m_children[this->m_childCount]->m_i = i;
+	this->m_children[this->m_childCount]->m_j = j;
+	this->m_childCount++;
+	return true;
 }
 
-MTreeNode* MTreeNode::hasChild(int i, int j)
+MTreeNode* MTreeNode::hasChild(int ci, int cj)
 {
-	if (this->j() - j == 0 && this->i() - i == -1 && this->m_children[0].m_parent != nullptr)
-	{
-		return this->m_children;
-	}
-	else if (this->i() - i == 0 && this->j() - j == -1 && this->m_children[1].m_parent != nullptr)
-	{
-		return this->m_children + 1;
-	}
+	for (int i = 0; i < this->m_childCount; i++)
+		if (this->m_children != nullptr && this->m_children[i]->m_i == ci && this->m_children[i]->m_j == cj)
+			return m_children[i];
 	return nullptr;
 }
 
@@ -90,6 +66,6 @@ MTreeNode* MTreeNode::beginTree(int i, int j)
 
 MTreeNode::~MTreeNode()
 {
-	if(m_children != nullptr)
-		delete[] m_children;
+	for (int i = 0; i < this->m_childCount; i++)
+		delete m_children[i];
 }
