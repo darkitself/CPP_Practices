@@ -51,8 +51,24 @@ bool MTreeNode::addChild(int i, int j)
 MTreeNode* MTreeNode::hasChild(int ci, int cj)
 {
 	for (int i = 0; i < this->m_childCount; i++)
-		if (this->m_children != nullptr && this->m_children[i]->m_i == ci && this->m_children[i]->m_j == cj)
+		if (this->m_children[i]->m_i == ci && this->m_children[i]->m_j == cj)
 			return m_children[i];
+	return nullptr;
+}
+
+MTreeNode* MTreeNode::searchNode(int i, int j)
+{
+	queue<MTreeNode*> nodes;
+	nodes.push(this);
+	while (!nodes.empty())
+	{
+		MTreeNode* node = nodes.front();
+		nodes.pop();
+		if (node->m_i == i && node->m_j == j)
+			return node;
+		for (int i = 0; i < node->m_childCount; i++)
+			nodes.push(node->m_children[i]);
+	}
 	return nullptr;
 }
 

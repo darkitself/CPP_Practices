@@ -12,6 +12,7 @@ private:
 	int m_rows;
 	int m_columns;
 public:
+	int startPoint[2];
 	Maze(int n, int m);
 	int rows() const;
 	int columns() const;
