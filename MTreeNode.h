@@ -1,7 +1,4 @@
 #pragma once
-#include <queue>
-
-using namespace std;
 
 class MTreeNode
 {
@@ -16,13 +13,13 @@ public:
 	int i() const;
 	int j() const;
 	const MTreeNode* parent() const;
-	const MTreeNode* child(int i) const;
+	const MTreeNode* child(const int i) const;
 	int distance() const;
 	int childCount() const;
-	bool addChild(int i, int j);
-	MTreeNode* hasChild(int i, int j);
-	MTreeNode* searchNode(int i, int j);
-	static MTreeNode* beginTree(int i, int j);
+	bool addChild(const int i, const int j);
+	MTreeNode* hasChild(const int i, const int j) const;
+	MTreeNode* searchNode(const int i, const int j) const;
+	static MTreeNode* beginTree(const int i, const int j);
 	~MTreeNode();
 };
 

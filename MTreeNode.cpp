@@ -1,5 +1,7 @@
 #include "MTreeNode.h"
 
+#include <queue>
+
 MTreeNode::MTreeNode(MTreeNode* parent)
 {
 	m_parent = parent;
@@ -21,7 +23,7 @@ const MTreeNode* MTreeNode::parent() const
 	return m_parent;
 }
 
-const MTreeNode* MTreeNode::child(int i) const
+const MTreeNode* MTreeNode::child(const int i) const
 {
 	return m_children[i];
 }
@@ -36,7 +38,7 @@ int MTreeNode::childCount() const
 	return m_childCount;
 }
 
-bool MTreeNode::addChild(int i, int j)
+bool MTreeNode::addChild(const int i, const int j)
 {
 	if (!(this->m_i - i == 0 && (this->m_j - j == 1 || this->m_j - j == -1)
 		|| this->m_j - j == 0 && (this->m_i - i == 1 || this->m_i - i == -1)))
@@ -48,7 +50,7 @@ bool MTreeNode::addChild(int i, int j)
 	return true;
 }
 
-MTreeNode* MTreeNode::hasChild(int ci, int cj)
+MTreeNode* MTreeNode::hasChild(const int ci, const int cj) const
 {
 	for (int i = 0; i < this->m_childCount; i++)
 		if (this->m_children[i]->m_i == ci && this->m_children[i]->m_j == cj)
@@ -56,23 +58,23 @@ MTreeNode* MTreeNode::hasChild(int ci, int cj)
 	return nullptr;
 }
 
-MTreeNode* MTreeNode::searchNode(int i, int j)
+MTreeNode* MTreeNode::searchNode(const int i, const int j) const
 {
-	queue<MTreeNode*> nodes;
+	std::queue<const MTreeNode*> nodes;
 	nodes.push(this);
 	while (!nodes.empty())
 	{
-		MTreeNode* node = nodes.front();
+		const MTreeNode* node = nodes.front();
 		nodes.pop();
 		if (node->m_i == i && node->m_j == j)
-			return node;
+			return (MTreeNode*)node;
 		for (int i = 0; i < node->m_childCount; i++)
 			nodes.push(node->m_children[i]);
 	}
 	return nullptr;
 }
 
-MTreeNode* MTreeNode::beginTree(int i, int j)
+MTreeNode* MTreeNode::beginTree(const int i, const int j)
 {
 	MTreeNode* node = new MTreeNode(nullptr);
 	node->m_i = i;
