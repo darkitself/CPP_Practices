@@ -28,8 +28,8 @@ Maze::Maze(int n, int m) : m_rows(n), m_columns(m), m_field(new MCell[n * m])
 		case 2:
 		{
 			this->startPoint[0] = rand() % n;
-			break;
 			this->startPoint[1] = 0;
+			break;
 		}
 		case 3:
 		{

@@ -37,13 +37,14 @@ int digitsCount(int n)
 
 void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 {
+	constexpr int directionsCount = 4;
 	std::queue<MTreeNode*> nodes; // { } initialization works only with deque or another queue (std::queue<int> que{ std::deque<int> { 3, 1, 4, 1, 5 } };). Or I'm stupid
 	nodes.push(&tree);
 	srand(time(0));
-	std::pair<int, int> steps[] = { std::pair<int,int> { 0, -1 },
-									std::pair<int,int> { 0, 1 },
-									std::pair<int,int> { -1, 0 },
-									std::pair<int,int> { 1, 0 } };
+	std::pair<int, int> steps[directionsCount] = { std::pair<int,int> { 0, -1 },
+												   std::pair<int,int> { 0, 1 },
+												   std::pair<int,int> { -1, 0 },
+												   std::pair<int,int> { 1, 0 } };
 	while (!nodes.empty())
 	{
 		MTreeNode* node = nodes.front();
@@ -53,13 +54,13 @@ void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 		while (!wasConnected && canConnect) // main maze generation (connect random neighboring points to each connected point)
 		{
 			canConnect = false;
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < directionsCount; i++)
 			{
 				std::pair<int, int> nextNode(node->i() + steps[i].first, node->j() + steps[i].second);
 
-				if ((nextNode.first < 0 || nextNode.first > iMaze.rows() - 1 || nextNode.second < 0 || nextNode.second > iMaze.columns() - 1))
-					continue;
-				if (isConnected(iMaze, nextNode.first, nextNode.second))
+				if (nextNode.first < 0 || nextNode.first > iMaze.rows() - 1
+					|| nextNode.second < 0 || nextNode.second > iMaze.columns() - 1
+					|| isConnected(iMaze, nextNode.first, nextNode.second))
 					continue;
 
 				canConnect = true;
@@ -83,8 +84,8 @@ void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 				if (isConnected(iMaze, i, j))
 					continue;
 				wasDisconnected = true;
-				shuffle(steps, 4);
-				for (int k = 0; k < 4; k++)
+				shuffle(steps, directionsCount);
+				for (int k = 0; k < directionsCount; k++)
 					if (isConnected(iMaze, i + steps[k].first, j + steps[k].second))
 					{
 						iMaze.makeConnection(i, j, i + steps[k].first, j + steps[k].second);
