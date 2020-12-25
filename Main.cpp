@@ -5,6 +5,8 @@
 #include <queue>
 #include <iostream>
 
+using namespace std;
+
 bool isConnected(const Maze& iMaze, const int i, const int j)
 {
 	return iMaze.hasConnection(i, j, i, j + 1)
@@ -13,14 +15,14 @@ bool isConnected(const Maze& iMaze, const int i, const int j)
 		|| iMaze.hasConnection(i, j, i - 1, j);
 }
 
-void shuffle(std::pair<int, int>* steps, const int size)
+void shuffle(pair<int, int>* steps, const int size)
 {
 	srand(time(0));
 	for (int i = 0; i < size; i++)
 	{
 		int n = rand() % size;
 		if (i != n)
-			std::swap(steps[i], steps[n]);
+			swap(steps[i], steps[n]);
 	}
 }
 
@@ -38,17 +40,16 @@ int digitsCount(int n)
 void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 {
 	constexpr int directionsCount = 4;
-	std::queue<MTreeNode*> nodes; // { } initialization works only with deque or another queue (std::queue<int> que{ std::deque<int> { 3, 1, 4, 1, 5 } };). Or I'm stupid
-	nodes.push(&tree);
+	deque<MTreeNode*> nodes{ &tree };
 	srand(time(0));
-	std::pair<int, int> steps[directionsCount] = { std::pair<int,int> { 0, -1 },
-												   std::pair<int,int> { 0, 1 },
-												   std::pair<int,int> { -1, 0 },
-												   std::pair<int,int> { 1, 0 } };
+	pair<int, int> steps[directionsCount] = { pair<int,int> { 0, -1 },
+												   pair<int,int> { 0, 1 },
+												   pair<int,int> { -1, 0 },
+												   pair<int,int> { 1, 0 } };
 	while (!nodes.empty())
 	{
 		MTreeNode* node = nodes.front();
-		nodes.pop();
+		nodes.pop_front();
 		bool canConnect = true;
 		bool wasConnected = false;
 		while (!wasConnected && canConnect) // main maze generation (connect random neighboring points to each connected point)
@@ -56,7 +57,7 @@ void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 			canConnect = false;
 			for (int i = 0; i < directionsCount; i++)
 			{
-				std::pair<int, int> nextNode(node->i() + steps[i].first, node->j() + steps[i].second);
+				pair<int, int> nextNode(node->i() + steps[i].first, node->j() + steps[i].second);
 
 				if (nextNode.first < 0 || nextNode.first > iMaze.rows() - 1
 					|| nextNode.second < 0 || nextNode.second > iMaze.columns() - 1
@@ -68,7 +69,7 @@ void buildFullMaze(Maze& iMaze, MTreeNode& tree)
 				{
 					iMaze.makeConnection(node->i(), node->j(), nextNode.first, nextNode.second);
 					node->addChild(nextNode.first, nextNode.second);
-					nodes.push(node->hasChild(nextNode.first, nextNode.second));
+					nodes.push_back(node->hasChild(nextNode.first, nextNode.second));
 					wasConnected = true;
 				}
 			}
@@ -119,12 +120,12 @@ int main()
 	for (int i = 0; i < m.rows(); i++)
 	{
 		for (int j = 0; j < m.columns(); j++)
-			std::cout << std::setw(digitsCount(maxWeight) + 1) << tree->searchNode(i, j)->distance();
-		std::cout << std::endl;
+			cout << setw(digitsCount(maxWeight) + 1) << tree->searchNode(i, j)->distance();
+		cout << endl;
 	}
 
-	std::cout << "Max weight: " << maxWeight << std::endl;
-	std::cout << "Average weight: " << sumWeight/m.columns()/m.rows() << std::endl;
+	cout << "Max weight: " << maxWeight << endl;
+	cout << "Average weight: " << sumWeight/m.columns()/m.rows() << endl;
 
 	delete tree;
 	return 0;

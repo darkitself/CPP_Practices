@@ -1,4 +1,5 @@
 #include "MCell.h"
+
 MCell::MCell()
 {
 	this->m_down = false;

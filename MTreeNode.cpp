@@ -1,6 +1,7 @@
 #include "MTreeNode.h"
-
 #include <queue>
+
+using namespace std;
 
 MTreeNode::MTreeNode(MTreeNode* parent)
 {
@@ -60,16 +61,15 @@ MTreeNode* MTreeNode::hasChild(const int ci, const int cj) const
 
 MTreeNode* MTreeNode::searchNode(const int i, const int j) const
 {
-	std::queue<const MTreeNode*> nodes;
-	nodes.push(this);
+	deque<const MTreeNode*> nodes{ this };
 	while (!nodes.empty())
 	{
 		const MTreeNode* node = nodes.front();
-		nodes.pop();
+		nodes.pop_front();
 		if (node->m_i == i && node->m_j == j)
-			return (MTreeNode*)node;
+			return const_cast<MTreeNode*>(node);
 		for (int i = 0; i < node->m_childCount; i++)
-			nodes.push(node->m_children[i]);
+			nodes.push_back(node->m_children[i]);
 	}
 	return nullptr;
 }
